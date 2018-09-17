@@ -1,0 +1,220 @@
+sleep 15
+
+export no_proxy="10.60.102.6"
+
+url=`cat $WORKSPACE/target/sonar/report-task.txt |grep ceTaskUrl |cut -f2,3 -d "="`
+
+status=`curl -u admin:admin $url |jq .task.status|sed -e 's/^"//'  -e 's/"$//'`
+
+if [[ "$status"=="SUCCESS" ]]; then
+analysisID=`curl -u admin:admin $url |jq '.task.analysisId'|sed -e 's/^"//'  -e 's/"$//'`
+else
+echo "Sonnar run was not sucess"
+exit 1;
+fi
+
+analysisUrl="http://10.60.102.6:9000/api/qualitygates/project_status?analysisId="
+quality_gate_status=`curl -u admin:admin $analysisUrl${analysisID} |jq '.projectStatus.status'|sed -e 's/^"//'  -e 's/"$//'`
+echo $quality_gate_status
+
+if [[ "$quality_gate_status" != "OK" ]]; then
+echo "Sonar Quality Gates Check FAILED"
+exit 1;
+else
+echo "Sonar Quality Gates Check PASSED"
+exit 0;
+fi
+
+
+
+if exist "XYZ-DataUpdate.sql" ( echo "file exists" ) else ( echo "file doesn't exist" )
+
+if exist "mstr.txt" ( echo "file exists" ) else ( echo "file doesn't exist" )
+
+copy /Y version1\menuConfig.xml C:\xstore\cust_config\version1
+
+jar xf xyz-pos.jar
+jar xf xyz-config.jar
+
+
+sqlcmd -H ${p:agent/ip} -d XSTORE -U pos -P pos -i F:\xstore-pos-deployments\XYZ-DataUpdate.sql
+
+
+
+
+file_path="/appdata/jenkins-slave"
+file_name="versiontest.txt"
+properties_name="propertiestest.properties"
+full_path=$file_path/$file_name
+properties_path=$file_path/$properties_name
+
+if [ ! -f $full_path ]; then
+ touch $full_path
+ echo "1.0.0" > $full_path
+ echo "c: $full_path"
+else
+ echo "File exist $full_path"
+fi
+
+version_number=`cat $full_path`
+echo "$version_number"
+
+last_digit=`echo $version_number | awk -F "." '{print $NF}'`
+echo $last_digit
+last_digit=$(($last_digit+1))
+
+remaining=`echo "${version_number::-2}"`
+middle_digit=`echo $remaining | awk -F "." '{print $NF}'`
+echo $middle_digit
+
+first_digit=`echo "${version_number::-4}"`
+echo $first_digit
+
+if [[ $last_digit -eq 10 ]];then
+  last_digit=0
+  middle_digit=$(($middle_digit+1))
+fi
+if [[ $middle_digit -eq 10 ]];then
+  middle_digit=0
+  first_digit=$(($first_digit+1))
+fi
+if [[ $first_digit -eq 10 ]];then
+  last_digit=1
+  middle_digit=0
+  first_digit=0
+fi
+
+complete_string=$first_digit.$middle_digit.$last_digit
+echo $complete_string > $full_path
+chmod 755 $full_path
+
+version=$complete_string
+echo "Version: $version"
+
+if [ ! -f $properties_path ]; then
+ touch $properties_path
+ echo "Version=$version" > $properties_path
+ echo "c: $properties_path"
+else
+ echo "File exist $properties_path"
+ rm -rf $properties_path
+ touch $properties_path
+ echo "Version=$version" > $properties_path
+ echo "c: $properties_path"
+ 
+fi
+
+cat $properties_path
+
+#mvn clean package -Dproject.version=$version
+#mvn build-helper:parse-version versions:set  -DnewVersion=$version 
+
+
+
+
+
+
+
+rm -rf updatedfiles/*
+for url in $(cat test2.txt)
+do(
+mkdir -p updatedfiles/$url
+rm -rf updatedfiles/$url
+cp $WORKSPACE/$url $WORKSPACE/updatedfiles/$url
+)
+done
+
+
+
+
+del test.txt
+del test2.txt
+git diff --name-only %GIT_PREVIOUS_COMMIT% %GIT_COMMIT% > test.txt
+type NUL > test2.txt
+   setlocal enabledelayedexpansion
+
+   for /F "tokens=*" %%i in (test.txt) do (
+  set line=%%i
+echo(!line:/=\!>>test2.txt
+ )
+mkdir updatedfiles
+del /q updatedfiles\*
+for /d %%x in (updatedfiles\*) do @rd /s /q "%%x"
+for /F "tokens=*" %%i in (test2.txt) do (
+ md updatedfiles\%%i
+ rd updatedfiles\%%i
+ copy "%WORKSPACE%\%%i" "%WORKSPACE%\updatedfiles\%%i"
+)
+
+
+
+git diff --name-only %GIT_PREVIOUS_COMMIT% %GIT_COMMIT% > test.txt
+type NUL > test2.txt
+   setlocal enabledelayedexpansion
+
+   for /F "tokens=*" %%i in (test.txt) do (
+  set line=%%i
+echo(!line:/=\!>>test2.txt
+ )
+mkdir updatedfiles
+DEL /Q updatedfiles\
+for /F "tokens=*" %%i in (test2.txt) do (
+ md updatedfiles\%%i
+ rd updatedfiles\%%i
+ copy "%WORKSPACE%\%%i" "%WORKSPACE%\updatedfiles\%%i"
+)
+
+
+VERSION INCREMENT
+
+file_path="/home/jenkins"
+
+fetch_version()
+{
+
+version_number=`cat $file_path/version.txt`
+
+echo "$(( version_number + 1 ))" > $file_path/version.txt`
+
+chmod 755 $file_path/version.txt
+
+echo $version_number
+
+}
+
+version=$(fetch_version)
+
+echo "Version: $version"
+
+mvn deploy -Dproject.version=$version
+
+curl -o D:\apache-tomcat-8.0.5\webapps\tera.war http://10.53.77.138:8081/nexus/service/local/repositories/nexus123/content/com/devops/tera/1.0.1-BUILD-SNAPSHOT/tera-1.0.1-BUILD-20160120.061806-1.war -u admin:admin123
+
+curl -L "http://10.53.77.138:8081/nexus/service/local/artifact/maven/redirect?r=Money&g=com.techm.app&a=moneyTransferApp&v=LATEST&p=war" -o E:\apache-tomcat-8.0.5\webapps\moneyTransferApp.war -u admin:admin123
+
+
+
+curl -L "http://10.53.77.138:8081/nexus/service/local/artifact/maven/redirect?r=Money&g=com.techm.app&a=moneyTransferApp&v=LATEST&p=war" -o D:\version\1.0\moneyTransferApp.war -u admin:admin123
+
+
+curl -L "D:\version\1.0\moneyTransferApp.war" -o E:\apache-tomcat-8.0.5\webapps\moneyTransferApp.war -u admin:admin123
+
+
+java -cp bin;lib/* org.testng.TestNG testng.xml
+
+(New-Object -Com Shell.Application).Open("http://google.co.in")
+
+
+curl -v -X PUT  --user admin:password  http://localhost:8087/artifactory/maven/scotia.war --upload-file E:\jenkinsJob\target\tera-1.0.1.war 
+
+
+
+(New-Object -Com Shell.Application).Open("http://172.19.82.207:2626/moneyTransferApp")
+
+
+fatal tomcat error-unable to deploy---check jvm version
+
+E:\apache-tomcat-8.0.5\bin>Tomcat8W //ES//Tomcat8
+
+
+curl -v -u admin:admin123 --upload-file D:\Load\techm\target\techm.war http://10.53.77.155:8085/nexus/content/repositories/rtc/com/techm/0.0.1-SNAPSHOT/tttttttttttttttt.warmvn deploy:deploy-file -DgroupId=com.adobe.aemds.guide -DartifactId=aemds-guide-core -Dversion=3.1.20 -Dpackaging=jar -Dfile="D:\new\com\adobe\aemds\guide\aemds-guide-core\3.1.20\aemds-guide-core-3.1.20.jar" -DrepositoryId=Maven-repository  -Durl=https://bitbucket.org/krishnamoorthyae/maven-repository/src/347d2eafeefd?at=master 
