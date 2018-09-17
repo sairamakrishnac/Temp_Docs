@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+- Licensed Materials - Property of IBM Corp.
+- IBM UrbanCode Deploy
+- (c) Copyright IBM Corporation 2011, 2016. All Rights Reserved.
+-
+- U.S. Government Users Restricted Rights - Use, duplication or disclosure restricted by
+- GSA ADP Schedule Contract with IBM Corp.
+-->
+
+<plugin xmlns="http://www.urbancode.com/PluginXMLSchema_v1" xmlns:server="http://www.urbancode.com/PluginServerXMLSchema_v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <header>
+    <identifier id="com.urbancode.air.plugin.nexus" name="Nexus" version="1"/>
+    <description>
+      The Nexus plug-in includes steps to download artifacts from a Nexus repository.
+    </description>
+    <tag>Repositories/Artifact/Nexus</tag>
+  </header>
+  <step-type name="Download NuGet package">
+    <description>Download a NuGet package from a Nexus repository.</description>
+    <properties>
+      <property name="nexusUrl" required="true">
+        <property-ui type="textBox" label="Nexus Url" description="The base URL of the Nexus repository. For example: http://localhost:8081/nexus"/>
+      </property>
+      <property name="packages" required="true">
+        <property-ui type="textAreaBox" label="Packages" description="A list of packages to download, separated by newline characters. Use the following format: repositoryName/packageID/packageVersion"/>
+      </property>
+      <property name="username">
+        <property-ui type="textBox" label="Repository Username" description="The user name to authenticate with Nexus."/>
+      </property>
+      <property name="password">
+        <property-ui type="secureBox" label="Repository Password" description="The password to authenticate with Nexus."/>
+      </property>
+    </properties>
+    <post-processing><![CDATA[
+        if (properties.get("exitCode") != 0) {
+            properties.put(new java.lang.String("Status"), new java.lang.String("Failure"));
+        }
+        else {
+            properties.put("Status", "Success");
+        }
+     ]]></post-processing>
+    <command program="${GROOVY_HOME}/bin/groovy">
+      <arg value="-cp"/>
+      <arg path="classes:lib/httpclient.jar:lib/httpcore.jar:lib/HttpComponents-Util.jar:lib/commons-codec.jar:lib/CommonsUtil.jar:lib/CommonsFileUtils.jar:lib/commons-lang.jar:lib/log4j.jar"/>
+      <arg file="nuget_download.groovy"/>
+      <arg file="${PLUGIN_INPUT_PROPS}"/>
+      <arg file="${PLUGIN_OUTPUT_PROPS}"/>
+    </command>
+  </step-type>
+</plugin>

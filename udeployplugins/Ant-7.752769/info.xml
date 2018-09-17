@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+- Licensed Materials - Property of IBM Corp.
+- IBM UrbanCode Build
+- IBM UrbanCode Deploy
+- IBM UrbanCode Release
+- IBM AnthillPro
+- (c) Copyright IBM Corporation 2002, 2013. All Rights Reserved.
+-
+- U.S. Government Users Restricted Rights - Use, duplication or disclosure restricted by
+- GSA ADP Schedule Contract with IBM Corp.
+--><pluginInfo xmlns="http://www.urbancode.com/InfoXMLSchema_v1" xmlns:server="http://www.urbancode.com/PluginServerXMLSchema_v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- Do not change the release-version, the build process injects it. -->
+  <release-version>7.752769</release-version>
+
+  <release-notes>
+    <!--
+      **release-note IS required**
+
+      The plugin-version name must match the plugin version found in the plugin.xml file
+
+      The release-note should document the changes, improvements, or bug fixes introduced
+      with the new plugin version
+
+      The release-note may contain text or reference a file in the plugin zip package
+
+      For example your release note could be:
+      Support for was added for version 10.0 for software X
+      or
+      releaseNotes/release1.html (where release1.html contains html formatted version information)
+
+      To add a new release note add this with a description in it of the changes:
+      <release-note plugin-version="1">....</release-note>
+
+      Our automated release process will replace 'LATEST' with the released version.
+
+      If this already exists in the file, then the described changes have not been released yet and
+      you should just append to the existing 'LATEST' tag.
+      -->
+
+    <release-note plugin-version="1">
+Loading the Ant plugin will give users access to the Ant Job steps for use when designing the deployment job.
+    </release-note>
+    <release-note plugin-version="2">
+Fix parsing of properties passed to Ant on the command line that have spaces in them.
+    </release-note>
+    <release-note plugin-version="3">
+Updated plugin to use plugin utility scripts.
+    </release-note>
+    <release-note plugin-version="4">
+Fixes APAR PI35342 - compatibility defect with IBM Urbancode Deploy version 6.1.0.4 and later.
+    </release-note>
+    <release-note plugin-version="5">
+Allow for user to pass ANT_OPT environment variable.
+    </release-note>
+    <release-note plugin-version="6">
+Remove the 'JVM Properties' property because Ant ignores JAVA_OPTS
+    </release-note>
+    <release-note plugin-version="7">Added RPX dependency and English translations</release-note>
+  </release-notes>
+</pluginInfo>

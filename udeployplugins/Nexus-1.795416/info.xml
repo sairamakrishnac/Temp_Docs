@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+- Licensed Materials - Property of IBM Corp.
+- IBM UrbanCode Deploy
+- (c) Copyright IBM Corporation 2016. All Rights Reserved.
+-
+- U.S. Government Users Restricted Rights - Use, duplication or disclosure restricted by
+- GSA ADP Schedule Contract with IBM Corp.
+--><pluginInfo>
+
+  <author name="IBM">
+    <organization>IBM UrbanCode</organization>
+    <email>ucplugin@us.ibm.com</email>
+    <website>https://www.ibmdw.net/urbancode/plugins/</website>
+    <bio/>
+  </author>
+
+  <integration type="Artifact"/>
+
+
+  <tool-description>Nexus is an open source repository and artifacts manager. It acts as a host/proxy for Maven, NuGet, NPM, RubyGems, Docker, Sites, YUM/RPM, Eclipse P2 and OSGi Bundle Repository OBR repositories.</tool-description>
+
+  <related-info>
+    <link description="Nexus website" title="Nexus website" type="WEBSITE" url="http://www.sonatype.com/nexus/solution-overview"/>
+  </related-info>
+
+  <meta-html>
+    <meta content="" name="description"/>
+    <meta content="" name="keywords"/>
+  </meta-html>
+
+  <!-- Do not change the release-version, the build process injects it. -->
+  <release-version>1.795416</release-version>
+
+  <release-notes>
+
+      <release-note plugin-version="1">
+Install this plugin to access to the steps listed below. These steps can be used when designing a component process.
+      </release-note>
+
+  </release-notes>
+</pluginInfo>

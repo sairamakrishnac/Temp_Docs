@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+- Licensed Materials - Property of IBM Corp.
+- IBM UrbanCode Build
+- IBM UrbanCode Deploy
+- IBM UrbanCode Release
+- IBM AnthillPro
+- (c) Copyright IBM Corporation 2002, 2013. All Rights Reserved.
+-
+- U.S. Government Users Restricted Rights - Use, duplication or disclosure restricted by
+- GSA ADP Schedule Contract with IBM Corp.
+-->
+<plugin xmlns="http://www.urbancode.com/PluginXMLSchema_v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <header>
+    <identifier id="com.urbancode.air.plugin.Ant" version="7" name="Ant"/>
+    <description>The Ant plugin is an automation based plugin. It is run during the deployment to automate the execution of ant tasks defined in a build.xml file.</description>
+    <tag>Build/Build Tools/Ant</tag>
+  </header>
+  <step-type name="Ant">
+    <description>Execute a Ant script.</description>
+    <properties>
+      <property name="antFileName" required="true">
+        <property-ui type="textBox" label="Ant Script File" description="The name of the Ant script file."/>
+      </property>
+      <property name="targetNames">
+        <property-ui type="textBox" label="Targets" description="The name(s) of the target(s) to run in the Ant script file. Empty for default target."/>
+      </property>
+      <property name="properties">
+        <property-ui type="textAreaBox" label="Properties" description="These properties are passed to Ant and will be available by name in the Ant script. Enter each argument on line in the following format: name=value"/>
+      </property>
+      <property name="antHome" required="true">
+        <property-ui type="textBox" label="ANT_HOME" default-value="${ANT_HOME}" description="The path to the Ant installation to execute the Ant script. Default is the agent's ANT_HOME environment variable."/>
+      </property>
+      <property name="antProperties">
+        <property-ui type="textAreaBox" label="Ant Properties" description="Ant-specific arguments, such as using '-v' for verbose output. Enter each argument on line."/>
+      </property>
+      <property name="antOpts">
+        <property-ui type="textAreaBox" label="ANT_OPTS" description="Ant-specific arguments, used in the ANT_OPTS environment variable.  Such as '-Xmx1024m' or '-XX:MaxPermSize=512m' Enter  each argument on a new line."/>
+      </property>
+      <property name="javaHome" required="true">
+        <property-ui type="textBox" label="JAVA_HOME" default-value="${JAVA_HOME}" description="The path to the Java installation to execute Ant. Default is the agent's JAVA_HOME environment variable."/>
+      </property>
+      <property name="scriptContent">
+        <property-ui type="textAreaBox" label="Script Content" description="Optionally define the content of the Ant script. The content will be written to the 'Ant Script File' then executed."/>
+      </property>
+    </properties>
+    <post-processing><![CDATA[
+        properties.put("Status", "Success");
+        if (properties.get("exitCode") != 0) {
+            properties.put("Status", "Failure");
+        }
+        else {
+            scanner.register("(?i)BUILD FAILED",  function(lineNumber, line) {
+                commandOut.println("Recieved Error");
+                commandOut.println(lineNumber.toString() + " : " + line);
+                var errors = properties.get("Error");
+                if (errors == null) {
+                    errors = new java.util.ArrayList();
+                }
+                errors.add(line);
+                properties.put("Error", errors);
+
+                properties.put("Status", "Failure");
+            });
+            scanner.scan();
+
+            var errors = properties.get("Error");
+            if (errors == null) {
+                errors = new java.util.ArrayList();
+            }
+            properties.put("Error", errors.toString());
+        }
+     ]]></post-processing>
+    <command program="${GROOVY_HOME}/bin/groovy">
+      <arg value="-cp"/>
+      <arg path="classes:lib/plugins-util.jar"/>
+      <arg file="ant.groovy"/>
+      <arg file="${PLUGIN_INPUT_PROPS}"/>
+      <arg file="${PLUGIN_OUTPUT_PROPS}"/>
+    </command>
+  </step-type>
+</plugin>
